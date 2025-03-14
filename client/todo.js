@@ -2,32 +2,35 @@ const input = document.querySelector("#input");
 
 const ol = document.querySelector("ol");
 
-// const renderTodo = () => {
-//   try {
-//     if (todo.length === 0) {
-//       ol.innerHTML = `
-//         <h4 class="no-todos">Nothing to do? Add a new todo to stay productive!</h4>
-//       `;
-//     } else {
-//       ol.innerHTML = "";
+const renderTodo = async () => {
+  try {
+    const data = await fetch("http://localhost:4211/getAllTodos");
+    const todo = await data.json();
+    console.log(todo);
+    if (todo.length === 0) {
+      ol.innerHTML = `
+        <h4 class="no-todos">Nothing to do? Add a new todo to stay productive!</h4>
+      `;
+    } else {
+      ol.innerHTML = "";
 
-//       for (let i = 0; i < todo.length; i++) {
-//         ol.innerHTML += ` <li class="text-start p-2" id="todoJs">${todo[i]}
+      todo.map((todo, index) => {
+        ol.innerHTML += ` <li key=${index} class="text-start p-2" id="todoJs">${todo.task}
 
-//                             <div class="d-flex">
-//                             <button onclick="liEditBtn(${i})" class="edit-btn"><i class="ri-edit-box-line"></i></button>
-//                               <button onclick="liDelBtn(${i})" class="del-btn"><i class="ri-close-line"></i></button>
-//                             </div>
+                            <div class="d-flex">
+                            <button onclick="liEditBtn()" class="edit-btn"><i class="ri-edit-box-line"></i></button>
+                              <button onclick="liDelBtn('${todo._id}')" class="del-btn"><i class="ri-close-line"></i></button>
+                            </div>
 
-//                             </li>`;
-//       }
-//     }
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
+                            </li>`;
+      });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
-// renderTodo();
+renderTodo();
 
 // create Todo
 
@@ -55,27 +58,32 @@ const createTodo = async () => {
   }
 };
 
-// const liDelBtn = (index) => {
-//   try {
-//     Swal.fire({
-//       title: "Are you sure ?",
-//       showDenyButton: true,
-//       confirmButtonText: "Yes",
-//       confirmButtonColor: "#4cc54c",
-//     }).then((result) => {
-//       /* Read more about isConfirmed, isDenied below */
-//       if (result.isConfirmed) {
-//         todo.splice(index, 1);
-//         todoArray.splice(index, 1); // Remove the deleted todo item from todoArray
-//         // renderTodo();
-//       } else if (result.isDenied) {
-//         // renderTodo();
-//       }
-//     });
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
+const liDelBtn = (id) => {
+  try {
+    Swal.fire({
+      title: "Are you sure ?",
+      showDenyButton: true,
+      confirmButtonText: "Yes",
+      confirmButtonColor: "#4cc54c",
+    }).then(async(result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        const res = await fetch(`http://localhost:4211/delete/${id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        console.log(res);
+        // renderTodo();
+      } else if (result.isDenied) {
+        // renderTodo();
+      }
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 // const liEditBtn = async (index) => {
 //   try {

@@ -28,4 +28,31 @@ app.post("/createTodo", async (req, res) => {
   }
 });
 
+// Read All Todos
+
+app.get("/getAllTodos", async (req, res) => {
+  try {
+    const todos = await todoModel.find();
+    res.send(todos);
+  } catch (error) {
+    res.json({
+      message: error.message || "Oops😕 Something went wrong!",
+    });
+  }
+});
+
+// Delete Todo
+
+app.post("/delete/:id", async (req, res) => {
+  try {
+    const todoId = req.params.id;
+    await todoModel.findByIdAndDelete(todoId)
+    res.send('Todo Deleted!')
+  } catch (error) {
+    res.json({
+      message: error.message || "Oops😕 Something went wrong!",
+    });
+  }
+});
+
 app.listen(4211, () => console.log("server is running"));
