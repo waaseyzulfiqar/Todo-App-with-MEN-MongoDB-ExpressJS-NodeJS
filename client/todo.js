@@ -4,7 +4,7 @@ const ol = document.querySelector("ol");
 
 const renderTodo = async () => {
   try {
-    const data = await fetch("https://todo-app-sever-lilac.vercel.app/getAllTodos");
+    const data = await fetch("https://todo-app-server-eta-eight.vercel.app/getAllTodos");
     const todo = await data.json();
     // console.log(todo);
     if (todo.length === 0) {
@@ -52,7 +52,7 @@ const createTodo = async () => {
       });
     }
 
-    const res = await fetch("https://todo-app-sever-lilac.vercel.app/createTodo", {
+    const res = await fetch("https://todo-app-server-eta-eight.vercel.app/createTodo", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -98,7 +98,7 @@ const liDelBtn = (id) => {
     }).then(async (result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        const res = await fetch(`https://todo-app-sever-lilac.vercel.app/delete/${id}`, {
+        const res = await fetch(`https://todo-app-server-eta-eight.vercel.app/delete/${id}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -144,7 +144,7 @@ const liEditBtn = async (id) => {
     });
     console.log(editedTodo);
     if (editedTodo) {
-      const res = await fetch(`https://todo-app-sever-lilac.vercel.app/update/${id}`, {
+      const res = await fetch(`https://todo-app-server-eta-eight.vercel.app/update/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

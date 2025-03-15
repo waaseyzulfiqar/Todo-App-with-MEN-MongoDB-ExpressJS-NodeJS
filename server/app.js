@@ -5,7 +5,13 @@ import todoModel from "./models/todoSchema.js";
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://todo-app-with-men.vercel.app", // Allow only this domain
+    methods: ["GET", "POST"], // Allowed HTTP methods
+    credentials: true, // Allow credentials (cookies, auth headers, etc.)
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
