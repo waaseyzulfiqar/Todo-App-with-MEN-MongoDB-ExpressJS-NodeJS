@@ -5,13 +5,7 @@ import todoModel from "./models/todoSchema.js";
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "https://todo-app-with-men.vercel.app", // Allow only this domain
-    methods: ["GET", "POST"], // Allowed HTTP methods
-    credentials: true, // Allow credentials (cookies, auth headers, etc.)
-  })
-);
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -52,8 +46,10 @@ app.get("/getAllTodos", async (req, res) => {
 app.post("/update/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const updated = await todoModel.findByIdAndUpdate(id, req.body, { new: true })
-    res.send(updated)
+    const updated = await todoModel.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+    res.send(updated);
   } catch (error) {
     res.json({
       message: error.message || "Oops😕 Something went wrong!",
