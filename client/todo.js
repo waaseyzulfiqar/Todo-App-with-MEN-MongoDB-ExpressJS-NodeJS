@@ -6,7 +6,7 @@ const renderTodo = async () => {
   try {
     const data = await fetch("http://localhost:4211/getAllTodos");
     const todo = await data.json();
-    console.log(todo);
+    // console.log(todo);
     if (todo.length === 0) {
       ol.innerHTML = `
         <h4 class="no-todos">Nothing to do? Add a new todo to stay productive!</h4>
@@ -42,9 +42,17 @@ const createTodo = async () => {
       todoObj = {
         task: input.value,
       };
+    } else {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: `Todo Input shouldn't be empty`,
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
 
-    await fetch("http://localhost:4211/createTodo", {
+    const res = await fetch("http://localhost:4211/createTodo", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -53,8 +61,27 @@ const createTodo = async () => {
     });
 
     input.value = "";
-    renderTodo()
+    // console.log(res);
+
+    if (res.status == 200 && res.ok === true) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Todo Added!😊",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+
+    renderTodo();
   } catch (error) {
+    Swal.fire({
+      position: "center",
+      icon: "error",
+      title: `${error.message} || Oops 😕 Something went wrong`,
+      showConfirmButton: false,
+      timer: 1500,
+    });
     console.log(error.message);
   }
 };
@@ -68,16 +95,27 @@ const liDelBtn = (id) => {
       showDenyButton: true,
       confirmButtonText: "Yes",
       confirmButtonColor: "#4cc54c",
-    }).then(async(result) => {
+    }).then(async (result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         const res = await fetch(`http://localhost:4211/delete/${id}`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        console.log(res);
+            "Content-Type": "application/json",
+          },
+        });
+        // console.log(res);
+
+        if (res.status == 200 && res.ok === true) {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Todo Deleted!😊",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+
         renderTodo();
       } else if (result.isDenied) {
         // renderTodo();
@@ -87,7 +125,6 @@ const liDelBtn = (id) => {
     console.log(error.message);
   }
 };
-
 
 // Update Todo
 
@@ -105,17 +142,28 @@ const liEditBtn = async (id) => {
         }
       },
     });
-console.log(editedTodo);
+    console.log(editedTodo);
     if (editedTodo) {
-       const res = await fetch(`http://localhost:4211/update/${id}`, {
+      const res = await fetch(`http://localhost:4211/update/${id}`, {
         method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body : JSON.stringify({
-          task: editedTodo
-        })
-       })
+        body: JSON.stringify({
+          task: editedTodo,
+        }),
+      });
+
+      // console.log(res);
+      if (res.status == 200 && res.ok === true) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Todo Updated!😊",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
       renderTodo();
     }
   } catch (error) {
