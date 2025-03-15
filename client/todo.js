@@ -18,7 +18,7 @@ const renderTodo = async () => {
         ol.innerHTML += ` <li key=${index} class="text-start p-2" id="todoJs">${todo.task}
 
                             <div class="d-flex">
-                            <button onclick="liEditBtn()" class="edit-btn"><i class="ri-edit-box-line"></i></button>
+                            <button onclick="liEditBtn('${todo._id}')" class="edit-btn"><i class="ri-edit-box-line"></i></button>
                               <button onclick="liDelBtn('${todo._id}')" class="del-btn"><i class="ri-close-line"></i></button>
                             </div>
 
@@ -53,10 +53,13 @@ const createTodo = async () => {
     });
 
     input.value = "";
+    renderTodo()
   } catch (error) {
     console.log(error.message);
   }
 };
+
+// Delete Todo
 
 const liDelBtn = (id) => {
   try {
@@ -75,7 +78,7 @@ const liDelBtn = (id) => {
           }
         })
         console.log(res);
-        // renderTodo();
+        renderTodo();
       } else if (result.isDenied) {
         // renderTodo();
       }
@@ -85,30 +88,37 @@ const liDelBtn = (id) => {
   }
 };
 
-// const liEditBtn = async (index) => {
-//   try {
-//     const { value: editedTodo } = await Swal.fire({
-//       title: "Edit your Todo",
-//       input: "text",
-//       inputValue: todo[index], // Use the current todo item as the input value
-//       showCancelButton: true,
-//       confirmButtonColor: "#4cc54c", // Change the button color to blue
-//       cancelButtonColor: "#d33", // Change the cancel button color to red
-//       inputValidator: (value) => {
-//         if (!value) {
-//           return "You need to write something!";
-//         }
-//       },
-//     });
 
-//     if (editedTodo) {
-//       todo.splice(index, 1, editedTodo); // Use the editedTodo value to update the todo item
+// Update Todo
 
-//       todoArray[index].task = editedTodo; // Update the edited todo item in todoArray
-
-//       // renderTodo();
-//     }
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
+const liEditBtn = async (id) => {
+  try {
+    const { value: editedTodo } = await Swal.fire({
+      title: "Edit your Todo",
+      input: "text",
+      showCancelButton: true,
+      confirmButtonColor: "#4cc54c", // Change the button color to blue
+      cancelButtonColor: "#d33", // Change the cancel button color to red
+      inputValidator: (value) => {
+        if (!value) {
+          return "You need to write something!";
+        }
+      },
+    });
+console.log(editedTodo);
+    if (editedTodo) {
+       const res = await fetch(`http://localhost:4211/update/${id}`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body : JSON.stringify({
+          task: editedTodo
+        })
+       })
+      renderTodo();
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};

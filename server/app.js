@@ -41,13 +41,27 @@ app.get("/getAllTodos", async (req, res) => {
   }
 });
 
+// Update Todo
+
+app.post("/update/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const updated = await todoModel.findByIdAndUpdate(id, req.body, { new: true })
+    res.send(updated)
+  } catch (error) {
+    res.json({
+      message: error.message || "Oops😕 Something went wrong!",
+    });
+  }
+});
+
 // Delete Todo
 
 app.post("/delete/:id", async (req, res) => {
   try {
     const todoId = req.params.id;
-    await todoModel.findByIdAndDelete(todoId)
-    res.send('Todo Deleted!')
+    await todoModel.findByIdAndDelete(todoId);
+    res.send("Todo Deleted!");
   } catch (error) {
     res.json({
       message: error.message || "Oops😕 Something went wrong!",
