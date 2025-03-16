@@ -99,7 +99,7 @@ const liDelBtn = (id) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         const res = await fetch(`http://localhost:4211/delete/${id}`, {
-          method: "POST",
+          method: "DELETE",
           headers: {
             "Content-Type": "application/json",
           },
@@ -145,7 +145,7 @@ const liEditBtn = async (id) => {
     console.log(editedTodo);
     if (editedTodo) {
       const res = await fetch(`http://localhost:4211/update/${id}`, {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
